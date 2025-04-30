@@ -41,3 +41,19 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+// Models
+
+export interface Product {
+    id: number;
+    name: string;
+    price: number;
+    category: string;
+    image_url: string | null;
+}
+
+// Page Props
+export interface LandingPageProps {
+    featuredProducts: Product[];
+    auth: User | null;
+}
