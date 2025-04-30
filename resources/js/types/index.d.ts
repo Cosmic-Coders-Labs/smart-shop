@@ -35,6 +35,9 @@ export interface User {
     id: number;
     name: string;
     email: string;
+    is_admin?: boolean;
+    phone?: string;
+    address?: string;
     avatar?: string;
     email_verified_at: string | null;
     created_at: string;
@@ -44,15 +47,21 @@ export interface User {
 
 // Models
 
+export interface Category {
+    id: number;
+    name: string;
+}
+
 export interface Product {
     id: number;
     name: string;
     price: number;
-    category: string;
+    category: string; // Use category name for frontend compatibility
     image_url: string | null;
 }
 
 // Page Props
+
 export interface LandingPageProps {
     featuredProducts: Product[];
     auth: User | null;

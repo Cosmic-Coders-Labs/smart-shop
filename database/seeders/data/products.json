@@ -1,0 +1,402 @@
+[
+    {
+        "name": "Wireless Bluetooth Headphones",
+        "description": "High-quality over-ear headphones with noise cancellation and 20-hour battery life.",
+        "price": 89.99,
+        "stock": 50,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=1"
+    },
+    {
+        "name": "4K Ultra HD Smart TV",
+        "description": "55-inch LED TV with HDR, smart streaming apps, and voice control.",
+        "price": 499.99,
+        "stock": 20,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=2"
+    },
+    {
+        "name": "Smartphone Pro 12",
+        "description": "Latest smartphone with 128GB storage, triple camera, and 5G support.",
+        "price": 799.99,
+        "stock": 30,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=3"
+    },
+    {
+        "name": "Wireless Charging Pad",
+        "description": "Fast-charging pad compatible with all Qi-enabled devices.",
+        "price": 29.99,
+        "stock": 100,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=4"
+    },
+    {
+        "name": "Portable Bluetooth Speaker",
+        "description": "Waterproof speaker with 10-hour battery life and deep bass.",
+        "price": 59.99,
+        "stock": 40,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=5"
+    },
+    {
+        "name": "Men’s Casual Jacket",
+        "description": "Stylish water-resistant jacket, perfect for fall and winter.",
+        "price": 69.99,
+        "stock": 60,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=6"
+    },
+    {
+        "name": "Women’s Running Shoes",
+        "description": "Lightweight sneakers with breathable mesh and cushioned soles.",
+        "price": 79.99,
+        "stock": 45,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=7"
+    },
+    {
+        "name": "Cotton Graphic T-Shirt",
+        "description": "Comfortable unisex t-shirt with vibrant printed design.",
+        "price": 19.99,
+        "stock": 80,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=8"
+    },
+    {
+        "name": "Denim Jeans Slim Fit",
+        "description": "Classic blue jeans with stretch for all-day comfort.",
+        "price": 49.99,
+        "stock": 55,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=9"
+    },
+    {
+        "name": "Wool Scarf",
+        "description": "Soft, warm scarf in a variety of colors for winter wear.",
+        "price": 24.99,
+        "stock": 70,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=10"
+    },
+    {
+        "name": "Non-Stick Cookware Set",
+        "description": "10-piece kitchen set with frying pans, saucepans, and lids.",
+        "price": 129.99,
+        "stock": 25,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=11"
+    },
+    {
+        "name": "Memory Foam Pillow",
+        "description": "Ergonomic pillow for neck support and better sleep.",
+        "price": 39.99,
+        "stock": 50,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=12"
+    },
+    {
+        "name": "LED Desk Lamp",
+        "description": "Adjustable lamp with touch control and USB charging port.",
+        "price": 34.99,
+        "stock": 60,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=13"
+    },
+    {
+        "name": "Ceramic Dinnerware Set",
+        "description": "Elegant 16-piece set for 4 people, dishwasher safe.",
+        "price": 89.99,
+        "stock": 30,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=14"
+    },
+    {
+        "name": "Robot Vacuum Cleaner",
+        "description": "Smart vacuum with app control and automatic charging.",
+        "price": 199.99,
+        "stock": 15,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=15"
+    },
+    {
+        "name": "Sci-Fi Novel Collection",
+        "description": "Box set of 5 bestselling science fiction novels.",
+        "price": 59.99,
+        "stock": 40,
+        "category_id": 4,
+        "image_url": "https://picsum.photos/300/300?random=16"
+    },
+    {
+        "name": "Cookbook for Beginners",
+        "description": "Easy-to-follow recipes for home cooking enthusiasts.",
+        "price": 24.99,
+        "stock": 65,
+        "category_id": 4,
+        "image_url": "https://picsum.photos/300/300?random=17"
+    },
+    {
+        "name": "Children’s Picture Book",
+        "description": "Colorful storybook with engaging illustrations for kids.",
+        "price": 14.99,
+        "stock": 80,
+        "category_id": 4,
+        "image_url": "https://picsum.photos/300/300?random=18"
+    },
+    {
+        "name": "Self-Help Guide",
+        "description": "Inspirational book on personal growth and mindfulness.",
+        "price": 19.99,
+        "stock": 50,
+        "category_id": 4,
+        "image_url": "https://picsum.photos/300/300?random=19"
+    },
+    {
+        "name": "Historical Fiction Novel",
+        "description": "Gripping tale set in the 19th century, based on true events.",
+        "price": 29.99,
+        "stock": 35,
+        "category_id": 4,
+        "image_url": "https://picsum.photos/300/300?random=20"
+    },
+    {
+        "name": "LEGO Building Kit",
+        "description": "500-piece set for creative building, ages 6+.",
+        "price": 49.99,
+        "stock": 45,
+        "category_id": 5,
+        "image_url": "https://picsum.photos/300/300?random=21"
+    },
+    {
+        "name": "Remote Control Car",
+        "description": "High-speed RC car with rechargeable battery.",
+        "price": 39.99,
+        "stock": 50,
+        "category_id": 5,
+        "image_url": "https://picsum.photos/300/300?random=22"
+    },
+    {
+        "name": "Plush Teddy Bear",
+        "description": "Soft, cuddly bear perfect for kids and gifting.",
+        "price": 19.99,
+        "stock": 70,
+        "category_id": 5,
+        "image_url": "https://picsum.photos/300/300?random=23"
+    },
+    {
+        "name": "Puzzle Board Game",
+        "description": "Family-friendly strategy game for 2-4 players.",
+        "price": 29.99,
+        "stock": 60,
+        "category_id": 5,
+        "image_url": "https://picsum.photos/300/300?random=24"
+    },
+    {
+        "name": "Action Figure Set",
+        "description": "Collectible set of 5 superhero figures.",
+        "price": 34.99,
+        "stock": 40,
+        "category_id": 5,
+        "image_url": "https://picsum.photos/300/300?random=25"
+    },
+    {
+        "name": "Gaming Mouse",
+        "description": "Ergonomic mouse with customizable RGB lighting.",
+        "price": 49.99,
+        "stock": 55,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=26"
+    },
+    {
+        "name": "Smart Watch",
+        "description": "Fitness tracker with heart rate monitor and GPS.",
+        "price": 129.99,
+        "stock": 30,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=27"
+    },
+    {
+        "name": "Wireless Keyboard",
+        "description": "Sleek keyboard with long battery life and quiet keys.",
+        "price": 59.99,
+        "stock": 40,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=28"
+    },
+    {
+        "name": "Portable Power Bank",
+        "description": "10000mAh power bank with dual USB ports.",
+        "price": 24.99,
+        "stock": 80,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=29"
+    },
+    {
+        "name": "Men’s Dress Shirt",
+        "description": "Formal shirt in crisp white, ideal for business wear.",
+        "price": 39.99,
+        "stock": 50,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=30"
+    },
+    {
+        "name": "Women’s Yoga Pants",
+        "description": "High-waisted leggings with stretch and moisture-wicking fabric.",
+        "price": 44.99,
+        "stock": 60,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=31"
+    },
+    {
+        "name": "Knit Sweater",
+        "description": "Cozy sweater for casual winter outings.",
+        "price": 54.99,
+        "stock": 45,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=32"
+    },
+    {
+        "name": "Baseball Cap",
+        "description": "Adjustable cap with embroidered logo.",
+        "price": 19.99,
+        "stock": 70,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=33"
+    },
+    {
+        "name": "Air Fryer",
+        "description": "5-quart air fryer with digital controls and 8 presets.",
+        "price": 89.99,
+        "stock": 25,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=34"
+    },
+    {
+        "name": "Coffee Maker",
+        "description": "Programmable 12-cup coffee maker with auto shut-off.",
+        "price": 59.99,
+        "stock": 35,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=35"
+    },
+    {
+        "name": "Throw Blanket",
+        "description": "Soft fleece blanket for cozy evenings.",
+        "price": 29.99,
+        "stock": 60,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=36"
+    },
+    {
+        "name": "Wall Art Print",
+        "description": "Modern canvas print, 24x36 inches.",
+        "price": 49.99,
+        "stock": 40,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=37"
+    },
+    {
+        "name": "Mystery Novel",
+        "description": "Thrilling detective story with unexpected twists.",
+        "price": 22.99,
+        "stock": 50,
+        "category_id": 4,
+        "image_url": "https://picsum.photos/300/300?random=38"
+    },
+    {
+        "name": "Fantasy Epic Trilogy",
+        "description": "Complete trilogy set in a magical world.",
+        "price": 69.99,
+        "stock": 30,
+        "category_id": 4,
+        "image_url": "https://picsum.photos/300/300?random=39"
+    },
+    {
+        "name": "Biography Bestseller",
+        "description": "Inspiring life story of a global icon.",
+        "price": 27.99,
+        "stock": 45,
+        "category_id": 4,
+        "image_url": "https://picsum.photos/300/300?random=40"
+    },
+    {
+        "name": "Board Game Classic",
+        "description": "Timeless strategy game for family fun.",
+        "price": 34.99,
+        "stock": 50,
+        "category_id": 5,
+        "image_url": "https://picsum.photos/300/300?random=41"
+    },
+    {
+        "name": "Dollhouse Playset",
+        "description": "Detailed playset with furniture and accessories.",
+        "price": 79.99,
+        "stock": 25,
+        "category_id": 5,
+        "image_url": "https://picsum.photos/300/300?random=42"
+    },
+    {
+        "name": "Drone with Camera",
+        "description": "Compact drone with 1080p camera and 15-minute flight time.",
+        "price": 149.99,
+        "stock": 20,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=43"
+    },
+    {
+        "name": "Fitness Tracker",
+        "description": "Water-resistant tracker with sleep and step monitoring.",
+        "price": 49.99,
+        "stock": 60,
+        "category_id": 1,
+        "image_url": "https://picsum.photos/300/300?random=44"
+    },
+    {
+        "name": "Hooded Sweatshirt",
+        "description": "Warm hoodie with kangaroo pocket, unisex.",
+        "price": 39.99,
+        "stock": 55,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=45"
+    },
+    {
+        "name": "Sunglasses",
+        "description": "Polarized sunglasses with UV protection.",
+        "price": 29.99,
+        "stock": 70,
+        "category_id": 2,
+        "image_url": "https://picsum.photos/300/300?random=46"
+    },
+    {
+        "name": "Blender",
+        "description": "High-power blender with 5 speed settings.",
+        "price": 69.99,
+        "stock": 30,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=47"
+    },
+    {
+        "name": "Area Rug",
+        "description": "Soft 5x7 ft rug in neutral tones.",
+        "price": 99.99,
+        "stock": 20,
+        "category_id": 3,
+        "image_url": "https://picsum.photos/300/300?random=48"
+    },
+    {
+        "name": "Poetry Anthology",
+        "description": "Collection of modern and classic poems.",
+        "price": 19.99,
+        "stock": 50,
+        "category_id": 4,
+        "image_url": "https://picsum.photos/300/300?random=49"
+    },
+    {
+        "name": "Building Block Set",
+        "description": "1000-piece block set for creative play.",
+        "price": 29.99,
+        "stock": 60,
+        "category_id": 5,
+        "image_url": "https://picsum.photos/300/300?random=50"
+    }
+]

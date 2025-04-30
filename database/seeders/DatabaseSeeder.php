@@ -7,8 +7,10 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\Recommendation;
 use App\Models\ChatMessage;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
 
 class DatabaseSeeder extends Seeder
 {
@@ -68,8 +70,31 @@ class DatabaseSeeder extends Seeder
             ]),
         ]);
 
-        // Create 50 products
-        $products = Product::factory()->count(50)->create();
+        // Seed Categories
+        $categories = collect([
+            Category::create(['name' => 'Electronics', 'description' => 'Gadgets and tech accessories']),
+            Category::create(['name' => 'Clothing', 'description' => 'Apparel and accessories']),
+            Category::create(['name' => 'Home', 'description' => 'Home appliances and decor']),
+            Category::create(['name' => 'Books', 'description' => 'Fiction, non-fiction, and more']),
+            Category::create(['name' => 'Toys', 'description' => 'Games and toys for all ages']),
+        ]);
+
+        // Seed Products from JSON
+        $productsData = json_decode(File::get(database_path('seeders/data/products.json')), true);
+        $products = collect();
+        foreach ($productsData as $productData) {
+            $product = Product::create([
+                'name' => $productData['name'],
+                'description' => $productData['description'],
+                'price' => $productData['price'],
+                'stock' => $productData['stock'],
+                'category_id' => $productData['category_id'],
+                'image_url' => $productData['image_url'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            $products->push($product);
+        }
 
         // Create 20 orders, each with 1-5 products, linked to static users
         $orders = Order::factory()->count(20)->create([

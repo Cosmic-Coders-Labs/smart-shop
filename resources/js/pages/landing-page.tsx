@@ -61,7 +61,7 @@ const LandingPage: React.FC = () => {
                                 />
                                 <div className="p-4">
                                     <h4 className="text-xl font-semibold">{product.name}</h4>
-                                    <p className="text-muted-foreground">${product.price.toFixed(2)}</p>
+                                    <p className="text-muted-foreground">${Number(product.price).toFixed(2)}</p>
                                     <p className="text-muted-foreground text-sm">{product.category}</p>
                                     <Link
                                         href={`/products/${product.id}`}
