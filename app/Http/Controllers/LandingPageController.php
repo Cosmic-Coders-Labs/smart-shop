@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChatMessage;
 use App\Models\Product;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -15,19 +16,24 @@ class LandingPageController extends Controller
             ->with('category')
             ->take(6)
             ->get()
-            ->map(function ($product) {
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'price' => $product->price,
-                    'category' => $product->category->name, // Use category name
-                    'image_url' => $product->image_url,
-                ];
-            });
+            ->map(fn($product) => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'category' => $product->category->name,
+                'image_url' => $product->image_url,
+            ]);
 
         return Inertia::render('landing-page', [
             'featuredProducts' => $featuredProducts,
-            'auth' => Auth::check() ? Auth::user() : null,
+            'auth' => Auth::user() ? ['name' => Auth::user()->name] : null,
+            'chatMessages' => ChatMessage::with('user')->get()->map(fn($msg) => [
+                'id' => $msg->id,
+                'user_id' => $msg->user_id,
+                'message' => $msg->message,
+                'is_bot' => $msg->is_bot,
+                'user' => ['name' => $msg->user->name],
+            ]),
         ]);
     }
 }

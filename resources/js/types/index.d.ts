@@ -63,6 +63,19 @@ export interface Product {
 // Page Props
 
 export interface LandingPageProps {
-    featuredProducts: Product[];
-    auth: User | null;
+    featuredProducts: Array<{
+        id: number;
+        name: string;
+        price: number;
+        category: string;
+        image_url: string;
+    }>;
+    auth: { name: string } | null;
+    chatMessages: Array<{
+        id: number;
+        user_id: number;
+        message: string;
+        is_bot: boolean;
+        user: { name: string };
+    }>;
 }

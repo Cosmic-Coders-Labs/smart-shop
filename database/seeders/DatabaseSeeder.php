@@ -9,77 +9,42 @@ use App\Models\Recommendation;
 use App\Models\ChatMessage;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Static Users
-        $users = collect([
+        // Seed Users
+        $usersData = json_decode(File::get(database_path('seeders/data/users.json')), true);
+        foreach ($usersData as $userData) {
             User::create([
-                'name' => 'Admin User',
-                'email' => 'admin@example.com',
-                'password' => Hash::make('admin123'),
-                'phone' => '555-000-0001',
-                'address' => '123 Admin St, City, Country',
-                'is_admin' => true,
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => Hash::make($userData['password']),
+                'phone' => $userData['phone'],
+                'address' => $userData['address'],
+                'is_admin' => $userData['is_admin'],
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]),
-            User::create([
-                'name' => 'John Doe',
-                'email' => 'john@example.com',
-                'password' => Hash::make('password'),
-                'phone' => '555-123-4567',
-                'address' => '456 Main St, City, Country',
-                'is_admin' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]),
-            User::create([
-                'name' => 'Jane Smith',
-                'email' => 'jane@example.com',
-                'password' => Hash::make('password'),
-                'phone' => '555-234-5678',
-                'address' => '789 Oak St, City, Country',
-                'is_admin' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]),
-            User::create([
-                'name' => 'Alice Johnson',
-                'email' => 'alice@example.com',
-                'password' => Hash::make('password'),
-                'phone' => '555-345-6789',
-                'address' => '321 Pine St, City, Country',
-                'is_admin' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]),
-            User::create([
-                'name' => 'Bob Wilson',
-                'email' => 'bob@example.com',
-                'password' => Hash::make('password'),
-                'phone' => '555-456-7890',
-                'address' => '654 Elm St, City, Country',
-                'is_admin' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]),
-        ]);
+            ]);
+        }
 
         // Seed Categories
-        $categories = collect([
-            Category::create(['name' => 'Electronics', 'description' => 'Gadgets and tech accessories']),
-            Category::create(['name' => 'Clothing', 'description' => 'Apparel and accessories']),
-            Category::create(['name' => 'Home', 'description' => 'Home appliances and decor']),
-            Category::create(['name' => 'Books', 'description' => 'Fiction, non-fiction, and more']),
-            Category::create(['name' => 'Toys', 'description' => 'Games and toys for all ages']),
-        ]);
+        $categoriesData = json_decode(File::get(database_path('seeders/data/categories.json')), true);
+        foreach ($categoriesData as $categoryData) {
+            Category::create([
+                'id' => $categoryData['id'],
+                'name' => $categoryData['name'],
+                'description' => $categoryData['description'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
-        // Seed Products from JSON
+        // Seed Products
         $productsData = json_decode(File::get(database_path('seeders/data/products.json')), true);
         $products = collect();
         foreach ($productsData as $productData) {
@@ -96,31 +61,55 @@ class DatabaseSeeder extends Seeder
             $products->push($product);
         }
 
-        // Create 20 orders, each with 1-5 products, linked to static users
-        $orders = Order::factory()->count(20)->create([
-            'user_id' => fn() => $users->random()->id,
-        ])->each(function ($order) use ($products) {
-            $orderProducts = $products->random(rand(1, 5))->pluck('id')->mapWithKeys(function ($productId) {
-                return [$productId => ['quantity' => rand(1, 3)]];
-            });
-            $order->products()->sync($orderProducts);
+        // Seed Orders
+        $ordersData = json_decode(File::get(database_path('seeders/data/orders.json')), true);
+        $orders = collect();
+        foreach ($ordersData as $orderData) {
+            $order = Order::create([
+                'user_id' => $orderData['user_id'],
+                'total_amount' => $orderData['total_amount'],
+                'status' => $orderData['status'],
+                'shipping_address' => $orderData['shipping_address'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            $orders->push($order);
+        }
 
-            // Recalculate total_amount
-            $totalAmount = $order->products()->get()->sum(function ($product) {
-                return $product->price * $product->pivot->quantity;
-            });
-            $order->update(['total_amount' => $totalAmount]);
-        });
+        // Seed Order-Product Relationships
+        $orderProductData = json_decode(File::get(database_path('seeders/data/order_product.json')), true);
+        foreach ($orderProductData as $data) {
+            DB::table('order_product')->insert([
+                'order_id' => $data['order_id'],
+                'product_id' => $data['product_id'],
+                'quantity' => $data['quantity'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
-        // Create 100 recommendations
-        Recommendation::factory()->count(100)->create([
-            'user_id' => fn() => $users->random()->id,
-            'product_id' => fn() => $products->random()->id,
-        ]);
+        // Seed Recommendations
+        $recommendationsData = json_decode(File::get(database_path('seeders/data/recommendations.json')), true);
+        foreach ($recommendationsData as $recommendationData) {
+            Recommendation::create([
+                'user_id' => $recommendationData['user_id'],
+                'product_id' => $recommendationData['product_id'],
+                'score' => $recommendationData['score'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
-        // Create 50 chat messages
-        ChatMessage::factory()->count(50)->create([
-            'user_id' => fn() => $users->random()->id,
-        ]);
+        // Seed Chat Messages
+        $chatMessagesData = json_decode(File::get(database_path('seeders/data/chat_messages.json')), true);
+        foreach ($chatMessagesData as $chatMessageData) {
+            ChatMessage::create([
+                'user_id' => $chatMessageData['user_id'],
+                'message' => $chatMessageData['message'],
+                'is_from_bot' => $chatMessageData['is_bot'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

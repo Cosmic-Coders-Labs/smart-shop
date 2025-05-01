@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "name": "Electronics",
+        "description": "Gadgets and tech accessories"
+    },
+    {
+        "id": 2,
+        "name": "Clothing",
+        "description": "Apparel and accessories"
+    },
+    {
+        "id": 3,
+        "name": "Home",
+        "description": "Home appliances and decor"
+    },
+    {
+        "id": 4,
+        "name": "Books",
+        "description": "Fiction, non-fiction, and more"
+    },
+    {
+        "id": 5,
+        "name": "Toys",
+        "description": "Games and toys for all ages"
+    }
+]
