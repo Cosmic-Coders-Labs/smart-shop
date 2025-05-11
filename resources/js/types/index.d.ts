@@ -51,13 +51,33 @@ export interface Category {
     id: number;
     name: string;
 }
-
 export interface Product {
     id: number;
     name: string;
+    description: string | null;
     price: number;
-    category: string; // Use category name for frontend compatibility
-    image_url: string | null;
+    stock: number;
+    category_id: number;
+    category: Category;
+    rating: number | null;
+    tags: string[] | null;
+    discount: number | null;
+    images: ProductImage[];
+}
+
+export interface ProductImage {
+    id: number;
+    product_id: number;
+    image_path: string;
+    is_primary: boolean;
+}
+
+export interface CartItem {
+    id: number;
+    user_id: number;
+    product_id: number;
+    quantity: number;
+    product: Product;
 }
 
 // Page Props
@@ -78,4 +98,26 @@ export interface LandingPageProps {
         is_bot: boolean;
         user: { name: string };
     }>;
+}
+
+export interface ProductsPageProps {
+    products: {
+        data: Product[];
+        links: Array<{ url: string | null; label: string; active: boolean }>;
+    };
+    categories: Category[];
+    filters: {
+        search: string | null;
+        category: string | number | null;
+        min_price: number | null;
+        max_price: number | null;
+        in_stock: boolean | null;
+        tags: string | null;
+    };
+    flash?: { success?: string; error?: string };
+}
+
+export interface CartPageProps {
+    cartItems: CartItem[];
+    flash?: { success?: string; error?: string };
 }

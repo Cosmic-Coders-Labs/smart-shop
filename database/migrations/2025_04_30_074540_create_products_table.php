@@ -18,7 +18,10 @@ return new class extends Migration
             $table->decimal('price', 8, 2);
             $table->integer('stock')->unsigned();
             $table->foreignId('category_id')->constrained()->onDelete('restrict');
-            $table->string('image_url')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->float('rating')->nullable()->default(0);
+            $table->json('tags')->nullable();
+            $table->integer('discount')->nullable()->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -18,16 +18,21 @@ class Product extends Model
         'description',
         'price',
         'stock',
-        'category',
-        'image_url',
+        'category_id',
+        'user_id',
+        'rating',
+        'tags',
+        'discount',
     ];
 
     protected $casts = [
         'price' => 'float',
         'stock' => 'integer',
+        'rating' => 'float',
+        'tags' => 'array',
+        'discount' => 'integer',
     ];
 
-    // Relationships
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -41,5 +46,20 @@ class Product extends Model
     public function recommendations(): HasMany
     {
         return $this->hasMany(Recommendation::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
+    public function primaryImage()
+    {
+        return $this->images()->where('is_primary', true)->first() ?? $this->images()->first();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -8,10 +8,11 @@ use App\Models\Order;
 use App\Models\Recommendation;
 use App\Models\ChatMessage;
 use App\Models\Category;
+use App\Models\ProductImage;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -44,20 +45,36 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Seed Products
+        // Seed Products and Images
         $productsData = json_decode(File::get(database_path('seeders/data/products.json')), true);
         $products = collect();
-        foreach ($productsData as $productData) {
+        foreach ($productsData as $index => $productData) {
             $product = Product::create([
                 'name' => $productData['name'],
                 'description' => $productData['description'],
                 'price' => $productData['price'],
                 'stock' => $productData['stock'],
                 'category_id' => $productData['category_id'],
-                'image_url' => $productData['image_url'],
+                'rating' => $productData['rating'],
+                'tags' => $productData['tags'],
+                'discount' => $productData['discount'],
+                'user_id' => $productData['user_id'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            // Seed 3 images per product
+            $productIndex = $index + 1;
+            for ($i = 1; $i <= 3; $i++) {
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => "product_images/product_{$productIndex}_{$i}.png",
+                    'is_primary' => $i === 1, // First image is primary
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
             $products->push($product);
         }
 

@@ -9,7 +9,7 @@ const LandingPage: React.FC = () => {
     const toggleChat = () => setIsChatOpen(!isChatOpen);
 
     return (
-        <div className="bg-background min-h-screen font-sans">
+        <div className="font-poppins bg-background text-foreground min-h-screen">
             <Head title="SmartShop - AI-Powered E-Commerce" />
 
             {/* Navigation */}
@@ -21,10 +21,10 @@ const LandingPage: React.FC = () => {
                             <span>Welcome, {auth.name}</span>
                         ) : (
                             <>
-                                <Link href="/login" className="hover:underline">
+                                <Link href="/login" className="hover:text-accent">
                                     Login
                                 </Link>
-                                <Link href="/register" className="hover:underline">
+                                <Link href="/register" className="hover:text-accent">
                                     Register
                                 </Link>
                             </>
@@ -42,7 +42,7 @@ const LandingPage: React.FC = () => {
                     </p>
                     <Link
                         href={auth ? '/products' : '/register'}
-                        className="transform rounded-full bg-yellow-400 px-8 py-3 font-semibold text-gray-800 shadow-md transition-all duration-300 hover:-translate-y-1 hover:bg-yellow-300 hover:shadow-lg"
+                        className="bg-accent text-foreground hover:bg-accent-foreground transform rounded-full px-8 py-3 font-semibold shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                     >
                         {auth ? 'Explore Products' : 'Start Shopping'}
                     </Link>
@@ -52,7 +52,7 @@ const LandingPage: React.FC = () => {
             {/* Featured Products */}
             <section className="bg-muted py-16">
                 <div className="container mx-auto">
-                    <h3 className="animate-fade-in mb-10 text-center text-3xl font-bold text-gray-800">Featured Products 🌟</h3>
+                    <h3 className="animate-fade-in text-foreground mb-10 text-center text-3xl font-bold">Featured Products 🌟</h3>
                     <div className="grid grid-cols-1 gap-8 px-2 sm:grid-cols-2 lg:grid-cols-3">
                         {featuredProducts.map((product) => (
                             <div key={product.id} className="bg-card text-card-foreground overflow-hidden rounded-lg shadow-md">
@@ -67,7 +67,7 @@ const LandingPage: React.FC = () => {
                                     <p className="text-muted-foreground text-sm">{product.category}</p>
                                     <Link
                                         href={`/products/${product.id}`}
-                                        className="bg-primary text-primary-foreground hover:bg-primary/90 mt-4 inline-block rounded-md px-4 py-2"
+                                        className="bg-primary text-primary-foreground hover:bg-primary-dark mt-4 inline-block rounded-md px-4 py-2"
                                     >
                                         View Details
                                     </Link>
@@ -79,17 +79,17 @@ const LandingPage: React.FC = () => {
             </section>
 
             {/* AI Features */}
-            <section className="bg-white py-16">
+            <section className="bg-background py-16">
                 <div className="container mx-auto">
-                    <h3 className="animate-fade-in mb-10 text-center text-3xl font-bold text-gray-800">Why Shop with Us? 💡</h3>
+                    <h3 className="animate-fade-in text-foreground mb-10 text-center text-3xl font-bold">Why Shop with Us? 💡</h3>
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                        <div className="animate-slide-up transform rounded-2xl border border-white/20 bg-white/30 p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105">
-                            <h4 className="mb-2 text-xl font-semibold text-gray-800">Personalized Picks</h4>
-                            <p className="text-gray-600">Our AI curates products just for you, making shopping a breeze!</p>
+                        <div className="animate-slide-up border-border bg-card transform rounded-2xl border p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105">
+                            <h4 className="text-foreground mb-2 text-xl font-semibold">Personalized Picks</h4>
+                            <p className="text-muted-foreground">Our AI curates products just for you, making shopping a breeze!</p>
                         </div>
-                        <div className="animate-slide-up transform rounded-2xl border border-white/20 bg-white/30 p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105">
-                            <h4 className="mb-2 text-xl font-semibold text-gray-800">Friendly Chatbot</h4>
-                            <p className="text-gray-600">Get instant help from our 24/7 AI assistant, always ready to assist!</p>
+                        <div className="animate-slide-up border-border bg-card transform rounded-2xl border p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105">
+                            <h4 className="text-foreground mb-2 text-xl font-semibold">Friendly Chatbot</h4>
+                            <p className="text-muted-foreground">Get instant help from our 24/7 AI assistant, always ready to assist!</p>
                         </div>
                     </div>
                 </div>
@@ -99,7 +99,7 @@ const LandingPage: React.FC = () => {
             <div className="fixed right-6 bottom-6 z-50">
                 <button
                     onClick={toggleChat}
-                    className="transform rounded-full bg-pink-500 p-4 text-white shadow-2xl transition-all duration-300 hover:scale-110 hover:rotate-12 hover:bg-pink-600"
+                    className="bg-pink text-primary-foreground hover:bg-pink-dark transform rounded-full p-4 shadow-2xl transition-all duration-300 hover:scale-110 hover:rotate-12"
                     aria-label="Toggle chat"
                 >
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,10 +112,10 @@ const LandingPage: React.FC = () => {
                     </svg>
                 </button>
                 {isChatOpen && (
-                    <div className="mt-2 flex h-96 w-80 origin-bottom scale-100 transform flex-col rounded-2xl bg-white/80 opacity-100 shadow-2xl backdrop-blur-lg transition-all duration-500 ease-in-out">
-                        <div className="flex items-center justify-between rounded-t-2xl bg-purple-500 p-4 text-white">
+                    <div className="bg-card mt-2 flex h-96 w-80 origin-bottom scale-100 transform flex-col rounded-2xl opacity-100 shadow-2xl backdrop-blur-lg transition-all duration-500 ease-in-out">
+                        <div className="bg-primary text-primary-foreground flex items-center justify-between rounded-t-2xl p-4">
                             <h4 className="font-semibold">Chat with SmartShop Bot</h4>
-                            <button onClick={toggleChat} className="text-white hover:text-pink-200">
+                            <button onClick={toggleChat} className="hover:text-accent">
                                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
@@ -127,7 +127,9 @@ const LandingPage: React.FC = () => {
                                     <div
                                         key={message.id}
                                         className={`max-w-[80%] rounded-xl p-3 ${
-                                            message.is_bot ? 'ml-auto bg-pink-100 text-gray-800' : 'mr-auto bg-purple-100 text-gray-800'
+                                            message.is_bot
+                                                ? 'bg-accent text-accent-foreground ml-auto'
+                                                : 'bg-secondary text-secondary-foreground mr-auto'
                                         }`}
                                     >
                                         <p className="text-sm font-medium">{message.is_bot ? 'SmartShop Bot' : message.user.name}</p>
@@ -135,7 +137,7 @@ const LandingPage: React.FC = () => {
                                     </div>
                                 ))
                             ) : (
-                                <p className="text-sm text-gray-500">Hi! How can I assist you today?</p>
+                                <p className="text-muted-foreground text-sm">Hi! How can I assist you today?</p>
                             )}
                         </div>
                         <form
@@ -143,17 +145,17 @@ const LandingPage: React.FC = () => {
                                 e.preventDefault();
                                 alert('Chat functionality coming soon!');
                             }}
-                            className="border-t border-gray-200 p-4"
+                            className="border-border border-t p-4"
                         >
                             <div className="flex space-x-2">
                                 <input
                                     type="text"
                                     placeholder="Type a message..."
-                                    className="flex-1 rounded-full bg-gray-100 p-2 text-gray-800 transition-all duration-300 focus:ring-2 focus:ring-pink-500 focus:outline-none"
+                                    className="bg-input text-foreground focus:ring-ring flex-1 rounded-full p-2 transition-all duration-300 focus:ring-2 focus:outline-none"
                                 />
                                 <button
                                     type="submit"
-                                    className="rounded-full bg-purple-500 p-2 text-white transition-colors duration-300 hover:bg-purple-600"
+                                    className="bg-primary text-primary-foreground hover:bg-primary-dark rounded-full p-2 transition-colors duration-300"
                                 >
                                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -161,21 +163,22 @@ const LandingPage: React.FC = () => {
                                 </button>
                             </div>
                         </form>
-                    </div> )}
+                    </div>
+                )}
             </div>
 
             {/* Footer */}
-            <footer className="bg-gradient-to-r from-purple-600 to-pink-500 py-8 text-white">
+            <footer className="from-primary to-pink text-primary-foreground bg-gradient-to-r py-8">
                 <div className="container mx-auto text-center">
                     <p className="text-sm opacity-80">© 2025 SmartShop Inc. All rights reserved.</p>
                     <div className="mt-4 space-x-6">
-                        <Link href="/about" className="transition-colors duration-300 hover:text-pink-200">
+                        <Link href="/about" className="hover:text-accent transition-colors duration-300">
                             About
                         </Link>
-                        <Link href="/contact" className="transition-colors duration-300 hover:text-pink-200">
+                        <Link href="/contact" className="hover:text-accent transition-colors duration-300">
                             Contact
                         </Link>
-                        <Link href="/privacy" className="transition-colors duration-300 hover:text-pink-200">
+                        <Link href="/privacy" className="hover:text-accent transition-colors duration-300">
                             Privacy Policy
                         </Link>
                     </div>
