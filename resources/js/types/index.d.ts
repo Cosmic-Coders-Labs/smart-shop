@@ -20,6 +20,7 @@ export interface NavItem {
     href: string;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    roles?: string[];
 }
 
 export interface SharedData {
@@ -88,7 +89,7 @@ export interface LandingPageProps {
         name: string;
         price: number;
         category: string;
-        image_url: string;
+        images: ProductImage[];
     }>;
     auth: { name: string } | null;
     chatMessages: Array<{

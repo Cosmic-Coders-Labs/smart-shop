@@ -1,122 +1,107 @@
 [
     {
         "user_id": 2,
-        "total_amount": 169.97,
+        "total_amount": 159.98,
         "status": "delivered",
-        "shipping_address": "456 Main St, City, Country"
+        "shipping_address": "456 Main St, City, Country",
+        "created_at": "2025-05-17T12:00:00Z"
     },
     {
         "user_id": 3,
         "total_amount": 579.98,
         "status": "processing",
-        "shipping_address": "789 Oak St, City, Country"
+        "shipping_address": "789 Oak St, City, Country",
+        "created_at": "2025-05-15T10:00:00Z"
     },
     {
         "user_id": 4,
-        "total_amount": 119.98,
+        "total_amount": 219.97,
         "status": "shipped",
-        "shipping_address": "321 Pine St, City, Country"
+        "shipping_address": "321 Pine St, City, Country",
+        "created_at": "2025-05-12T14:00:00Z"
     },
     {
         "user_id": 5,
-        "total_amount": 249.97,
+        "total_amount": 79.99,
         "status": "delivered",
-        "shipping_address": "654 Elm St, City, Country"
+        "shipping_address": "654 Elm St, City, Country",
+        "created_at": "2025-05-10T09:00:00Z"
     },
     {
         "user_id": 2,
         "total_amount": 79.99,
         "status": "pending",
-        "shipping_address": "456 Main St, City, Country"
+        "shipping_address": "456 Main St, City, Country",
+        "created_at": "2025-05-08T16:00:00Z"
     },
     {
         "user_id": 3,
-        "total_amount": 149.98,
+        "total_amount": 219.97,
         "status": "delivered",
-        "shipping_address": "789 Oak St, City, Country"
+        "shipping_address": "789 Oak St, City, Country",
+        "created_at": "2025-05-05T11:00:00Z"
     },
     {
         "user_id": 4,
-        "total_amount": 299.96,
+        "total_amount": 69.99,
         "status": "shipped",
-        "shipping_address": "321 Pine St, City, Country"
+        "shipping_address": "321 Pine St, City, Country",
+        "created_at": "2025-05-03T13:00:00Z"
     },
     {
         "user_id": 5,
         "total_amount": 89.99,
         "status": "processing",
-        "shipping_address": "654 Elm St, City, Country"
+        "shipping_address": "654 Elm St, City, Country",
+        "created_at": "2025-05-01T15:00:00Z"
     },
     {
         "user_id": 2,
-        "total_amount": 199.98,
+        "total_amount": 149.97,
         "status": "delivered",
-        "shipping_address": "456 Main St, City, Country"
+        "shipping_address": "456 Main St, City, Country",
+        "created_at": "2025-04-28T10:00:00Z"
     },
     {
         "user_id": 3,
-        "total_amount": 129.99,
+        "total_amount": 104.98,
         "status": "pending",
-        "shipping_address": "789 Oak St, City, Country"
+        "shipping_address": "789 Oak St, City, Country",
+        "created_at": "2025-04-25T12:00:00Z"
     },
     {
         "user_id": 4,
-        "total_amount": 159.97,
+        "total_amount": 89.97,
         "status": "shipped",
-        "shipping_address": "321 Pine St, City, Country"
+        "shipping_address": "321 Pine St, City, Country",
+        "created_at": "2025-04-22T14:00:00Z"
     },
     {
         "user_id": 5,
-        "total_amount": 349.95,
+        "total_amount": 179.97,
         "status": "delivered",
-        "shipping_address": "654 Elm St, City, Country"
+        "shipping_address": "654 Elm St, City, Country",
+        "created_at": "2025-04-20T09:00:00Z"
     },
     {
         "user_id": 2,
         "total_amount": 99.98,
         "status": "processing",
-        "shipping_address": "456 Main St, City, Country"
+        "shipping_address": "456 Main St, City, Country",
+        "created_at": "2025-04-18T16:00:00Z"
     },
     {
         "user_id": 3,
-        "total_amount": 179.98,
+        "total_amount": 104.97,
         "status": "shipped",
-        "shipping_address": "789 Oak St, City, Country"
+        "shipping_address": "789 Oak St, City, Country",
+        "created_at": "2025-04-15T11:00:00Z"
     },
     {
         "user_id": 4,
-        "total_amount": 239.97,
-        "status": "delivered",
-        "shipping_address": "321 Pine St, City, Country"
-    },
-    {
-        "user_id": 5,
         "total_amount": 109.99,
-        "status": "pending",
-        "shipping_address": "654 Elm St, City, Country"
-    },
-    {
-        "user_id": 2,
-        "total_amount": 189.98,
-        "status": "shipped",
-        "shipping_address": "456 Main St, City, Country"
-    },
-    {
-        "user_id": 3,
-        "total_amount": 139.99,
         "status": "delivered",
-        "shipping_address": "789 Oak St, City, Country"
-    },
-    {
-        "user_id": 4,
-        "total_amount": 269.96,
-        "status": "processing",
-        "shipping_address": "321 Pine St, City, Country"
-    },
-    {
-        "user_id": 5,
-        "total_amount": 199.99,
-        "status": "shipped",
-        "shipping_address": "654 Elm St, City, Country"
+        "shipping_address": "321 Pine St, City, Country",
+        "created_at": "2025-04-12T13:00:00Z"
     }
 ]

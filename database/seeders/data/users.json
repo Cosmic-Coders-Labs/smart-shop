@@ -1,50 +1,47 @@
 [
     {
         "name": "Admin User",
-        "email": "admin@example.com",
-        "password": "admin123",
-        "phone": "555-000-0001",
-        "address": "123 Admin St, City, Country",
-        "is_admin": true
+        "email": "admin@smartshop.com",
+        "password": "password",
+        "phone": "123-456-7890",
+        "address": "100 Admin Rd, City, Country",
+        "is_admin": true,
+        "role": "admin"
     },
     {
         "name": "John Doe",
-        "email": "john@example.com",
+        "email": "john@smartshop.com",
         "password": "password",
-        "phone": "555-123-4567",
+        "phone": "234-567-8901",
         "address": "456 Main St, City, Country",
-        "is_admin": false
+        "is_admin": false,
+        "role": "customer"
     },
     {
         "name": "Jane Smith",
-        "email": "jane@example.com",
+        "email": "jane@smartshop.com",
         "password": "password",
-        "phone": "555-234-5678",
+        "phone": "345-678-9012",
         "address": "789 Oak St, City, Country",
-        "is_admin": false
+        "is_admin": false,
+        "role": "customer"
     },
     {
-        "name": "Alice Johnson",
-        "email": "alice@example.com",
+        "name": "Bob Johnson",
+        "email": "bob@smartshop.com",
         "password": "password",
-        "phone": "555-345-6789",
+        "phone": "456-789-0123",
         "address": "321 Pine St, City, Country",
-        "is_admin": false
+        "is_admin": false,
+        "role": "customer"
     },
     {
-        "name": "Bob Wilson",
-        "email": "bob@example.com",
+        "name": "Alice Brown",
+        "email": "alice@smartshop.com",
         "password": "password",
-        "phone": "555-456-7890",
+        "phone": "567-890-1234",
         "address": "654 Elm St, City, Country",
-        "is_admin": false
-    },
-    {
-        "name": "SmartShop Bot",
-        "email": "bot@smartshop.com",
-        "password": "chatbot",
-        "phone": null,
-        "address": null,
-        "is_admin": false
+        "is_admin": false,
+        "role": "customer"
     }
 ]

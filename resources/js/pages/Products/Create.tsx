@@ -1,250 +1,297 @@
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Head, router, usePage } from '@inertiajs/react';
+import AppLayout from '@/layouts/app-layout';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+interface Category {
+    id: number;
+    name: string;
+}
+
+interface Image {
+    id: number;
+    image_path: string;
+    is_primary: boolean;
+    url: string;
+}
 
 interface Product {
     id: number;
     name: string;
-    description: string | null;
+    description: string;
     price: number;
     stock: number;
     category_id: number;
+    rating: number;
     tags: string[];
-    discount: number | null;
-    images: { id: number; image_path: string; is_primary: boolean }[];
+    discount: number;
+    existing_images: Image[];
     primary_image_index: number;
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: route('dashboard') },
-    { title: 'Products', href: route('products.index') },
-    { title: 'Create Product', href: route('products.create') },
-];
+interface PageProps {
+    categories: Category[];
+    product?: Product;
+    generatedDescription?: string;
+    flash?: { success?: string; error?: string };
+}
 
-const ProductCreatePage: React.FC = () => {
-    const { categories, product, flash, errors } = usePage<{
-        categories: Array<{ id: number; name: string }>;
-        product: Product | null;
-        flash: { success?: string; error?: string };
-        errors: Record<string, string>;
-    }>().props;
+const CreateProductPage: React.FC = () => {
+    const { categories, product, generatedDescription, flash } = usePage<PageProps>().props;
 
-    const isEditing = !!product;
-
-    const [form, setForm] = useState({
-        name: product?.name ?? '',
-        description: product?.description ?? '',
-        price: product?.price.toString() ?? '',
-        stock: product?.stock.toString() ?? '',
-        category_id: product?.category_id.toString() ?? '',
-        tags: product?.tags ?? [],
-        discount: product?.discount?.toString() ?? '',
+    const { data, setData, errors, post, put, processing } = useForm({
+        name: product?.name || '',
+        description: product?.description || '',
+        price: product?.price?.toString() || '',
+        stock: product?.stock?.toString() || '',
+        category_id: product?.category_id?.toString() || '',
+        rating: product?.rating?.toString() || '',
+        tags: product?.tags || [],
+        discount: product?.discount?.toString() || '',
         images: [] as File[],
-        existing_images: product?.images ?? [],
-        primary_image_index: product?.images.findIndex((img) => img.is_primary) ?? 0,
+        existing_images: product?.existing_images || [],
+        primary_image_index: product?.primary_image_index || 0,
     });
 
-    const [tagInput, setTagInput] = useState('');
+    const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
+    const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
+    // Handle flash messages and generated description
     useEffect(() => {
-        console.log('ProductCreatePage Flash:', flash);
-        console.log('ProductCreatePage Errors:', errors);
         if (flash?.success) {
             toast.success(flash.success);
         }
         if (flash?.error) {
             toast.error(flash.error);
         }
-        if (Object.keys(errors).length > 0) {
-            Object.values(errors).forEach((error) => toast.error(error));
+        if (generatedDescription) {
+            setData('description', generatedDescription);
         }
-        // toast.success('Test toast on ProductCreatePage'); // Uncomment to test
-    }, [flash, errors]);
+    }, [flash, generatedDescription]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
+    // Handle image uploads with preview and validation
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+        const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+
+        const validFiles: File[] = [];
+        const previews: string[] = [];
+
+        files.forEach((file) => {
+            if (!allowedTypes.includes(file.type)) {
+                toast.error(`Invalid file type for ${file.name}. Only JPEG, PNG, JPG, GIF allowed.`);
+                return;
+            }
+            if (file.size > maxSize) {
+                toast.error(`File ${file.name} exceeds 2MB limit.`);
+                return;
+            }
+            validFiles.push(file);
+            previews.push(URL.createObjectURL(file));
+        });
+
+        setData('images', validFiles);
+        setImagePreviews(previews);
+
+        // Clean up previews on unmount
+        return () => previews.forEach((preview) => URL.revokeObjectURL(preview));
     };
 
-    const handleSelectChange = (value: string) => {
-        setForm((prev) => ({ ...prev, category_id: value }));
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setForm((prev) => ({ ...prev, images: Array.from(e.target.files!) }));
+    // Generate description using web route
+    const generateDescription = () => {
+        if (!data.name) {
+            toast.error('Please provide a product name.');
+            return;
         }
-    };
-
-    const handlePrimaryImageChange = (index: number, isNewImage: boolean) => {
-        setForm((prev) => ({ ...prev, primary_image_index: index }));
-    };
-
-    const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTagInput(e.target.value);
-    };
-
-    const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && tagInput.trim()) {
-            e.preventDefault();
-            setForm((prev) => ({
-                ...prev,
-                tags: [...prev.tags, tagInput.trim()],
-            }));
-            setTagInput('');
+        if (data.images.length === 0) {
+            toast.error('Please upload at least one image.');
+            return;
         }
-    };
 
-    const removeTag = (index: number) => {
-        setForm((prev) => ({
-            ...prev,
-            tags: prev.tags.filter((_, i) => i !== index),
-        }));
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-
+        setIsGeneratingDescription(true);
         const formData = new FormData();
-        formData.append('name', form.name);
-        formData.append('description', form.description);
-        formData.append('price', form.price);
-        formData.append('stock', form.stock);
-        formData.append('category_id', form.category_id);
-        formData.append('rating', '0'); // Default rating to 0
-        formData.append('tags', JSON.stringify(form.tags));
-        formData.append('discount', form.discount);
-        form.images.forEach((image, index) => {
-            formData.append('images[]', image);
-        });
-        form.existing_images.forEach((image, index) => {
-            formData.append(`existing_images[${index}][id]`, image.id.toString());
-            formData.append(`existing_images[${index}][is_primary]`, (index === form.primary_image_index).toString());
-        });
-        formData.append('primary_image_index', form.primary_image_index.toString());
+        formData.append('name', data.name);
+        formData.append('image', data.images[0]);
 
-        const method = isEditing ? 'put' : 'post';
-        const routeName = isEditing ? route('products.update', product!.id) : route('products.store');
-
-        router[method](routeName, formData, {
+        router.post(route('products.generate-description'), formData, {
             preserveState: true,
             preserveScroll: true,
-            forceFormData: true,
-            onError: (errors) => {
-                console.log('Product errors:', errors);
-            },
             onSuccess: () => {
-                console.log(isEditing ? 'Product updated successfully' : 'Product created successfully');
-                if (!isEditing) {
-                    setForm({
-                        name: '',
-                        description: '',
-                        price: '',
-                        stock: '',
-                        category_id: '',
-                        tags: [],
-                        discount: '',
-                        images: [],
-                        existing_images: [],
-                        primary_image_index: 0,
-                    });
-                    setTagInput('');
-                }
+                toast.success('Description generated successfully');
+                setIsGeneratingDescription(false);
+            },
+            onError: (errors) => {
+                console.error('Generate description error:', errors);
+                const errorMessage = errors.image
+                    ? `Image error: ${errors.image}`
+                    : errors.name
+                      ? `Name error: ${errors.name}`
+                      : errors.error || 'Failed to generate description';
+                toast.error(errorMessage);
+                setIsGeneratingDescription(false);
             },
         });
+    };
+
+    // Handle form submission
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const formData = new FormData();
+        Object.entries(data).forEach(([key, value]) => {
+            if (key === 'images') {
+                (value as File[]).forEach((image, index) => {
+                    formData.append(`images[${index}]`, image);
+                });
+            } else if (key === 'tags' || key === 'existing_images') {
+                formData.append(key, JSON.stringify(value));
+            } else {
+                formData.append(key, value as string);
+            }
+        });
+
+        if (product) {
+            put(route('products.update', product.id), {
+                data: formData,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => toast.success('Product updated successfully'),
+                onError: () => toast.error('Failed to update product'),
+            });
+        } else {
+            post(route('products.store'), {
+                data: formData,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => toast.success('Product created successfully'),
+                onError: () => toast.error('Failed to create product'),
+            });
+        }
+    };
+
+    // Handle tag input
+    const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+            setData('tags', [...data.tags, e.currentTarget.value.trim()]);
+            e.currentTarget.value = '';
+        }
+    };
+
+    // Remove tag
+    const removeTag = (index: number) => {
+        setData(
+            'tags',
+            data.tags.filter((_, i) => i !== index),
+        );
+    };
+
+    // Handle existing image removal
+    const removeExistingImage = (index: number) => {
+        setData(
+            'existing_images',
+            data.existing_images.filter((_, i) => i !== index),
+        );
+    };
+
+    // Set primary image
+    const setPrimaryImage = (index: number) => {
+        setData('primary_image_index', index);
+        const updatedImages = data.existing_images.map((img, i) => ({
+            ...img,
+            is_primary: i === index,
+        }));
+        setData('existing_images', updatedImages);
+    };
+
+    // Remove uploaded image
+    const removeUploadedImage = (index: number) => {
+        const newImages = data.images.filter((_, i) => i !== index);
+        const newPreviews = imagePreviews.filter((_, i) => i !== index);
+        setData('images', newImages);
+        setImagePreviews(newPreviews);
+        URL.revokeObjectURL(imagePreviews[index]);
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs} className="flex h-full flex-1 flex-col gap-6 rounded-xl p-6">
-            <Head title={`${isEditing ? 'Edit' : 'Create'} Product - SmartShop`} />
-            <h1 className="text-primary mb-6 text-3xl font-bold">{isEditing ? 'Edit Product' : 'Create Product'}</h1>
+        <AppLayout
+            breadcrumbs={[
+                { title: 'Dashboard', href: route('dashboard') },
+                { title: 'Products', href: route('products.index') },
+                { title: product ? 'Edit Product' : 'Create Product', href: '#' },
+            ]}
+            className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4"
+        >
+            <Head title={product ? `Edit ${product.name}` : 'Create Product'} />
+            <h1 className="text-primary mb-8 text-3xl font-bold">{product ? 'Edit Product' : 'Create Product'}</h1>
 
-            <form onSubmit={handleSubmit} className="bg-card w-full rounded-lg p-8 shadow-md">
-                <div className="grid gap-6">
-                    <div className="grid grid-cols-3 items-center gap-4">
-                        <Label htmlFor="name" className="text-left font-medium">
-                            Name
-                        </Label>
-                        <div className="col-span-2">
+            <Card className="border-primary/10 shadow-lg">
+                <CardHeader>
+                    <CardTitle className="text-2xl">{product ? 'Edit Product' : 'Create New Product'}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit} encType="multipart/form-data" className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        {/* Name */}
+                        <div className="space-y-2">
+                            <Label htmlFor="name" className="text-lg font-semibold">
+                                Name
+                            </Label>
                             <Input
                                 id="name"
-                                name="name"
-                                value={form.name}
-                                onChange={handleChange}
-                                placeholder={isEditing ? form.name || 'Enter product name' : 'Enter product name'}
-                                className="focus:border-primary focus:ring-primary w-full rounded border-gray-300"
-                                required
+                                value={data.name}
+                                onChange={(e) => setData('name', e.target.value)}
+                                placeholder="Product Name"
+                                className="border-primary/20 focus:ring-primary"
                             />
-                            {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+                            {errors.name && <p className="text-destructive text-sm">{errors.name}</p>}
                         </div>
-                    </div>
 
-                    <div className="grid grid-cols-3 items-start gap-4">
-                        <Label htmlFor="description" className="text-left font-medium">
-                            Description
-                        </Label>
-                        <div className="col-span-2">
-                            <Textarea
-                                id="description"
-                                name="description"
-                                value={form.description}
-                                onChange={handleChange}
-                                placeholder={isEditing ? form.description || 'Enter product description' : 'Enter product description'}
-                                className="focus:border-primary focus:ring-primary w-full rounded border-gray-300"
+                        {/* Price */}
+                        <div className="space-y-2">
+                            <Label htmlFor="price" className="text-lg font-semibold">
+                                Price
+                            </Label>
+                            <Input
+                                id="price"
+                                type="number"
+                                step="0.01"
+                                value={data.price}
+                                onChange={(e) => setData('price', e.target.value)}
+                                placeholder="Price"
+                                className="border-primary/20 focus:ring-primary"
                             />
-                            {errors.description && <p className="mt-1 text-sm text-red-500">{errors.description}</p>}
+                            {errors.price && <p className="text-destructive text-sm">{errors.price}</p>}
                         </div>
-                    </div>
 
-                    <div className="grid grid-cols-3 items-center gap-4">
-                        <Label className="text-left font-medium">Price & Stock</Label>
-                        <div className="col-span-2 flex gap-4">
-                            <div className="flex-1">
-                                <Input
-                                    id="price"
-                                    name="price"
-                                    type="number"
-                                    step="0.01"
-                                    value={form.price}
-                                    onChange={handleChange}
-                                    placeholder={isEditing ? form.price || 'Price' : 'Price'}
-                                    className="focus:border-primary focus:ring-primary w-full rounded border-gray-300"
-                                    required
-                                />
-                                {errors.price && <p className="mt-1 text-sm text-red-500">{errors.price}</p>}
-                            </div>
-                            <div className="flex-1">
-                                <Input
-                                    id="stock"
-                                    name="stock"
-                                    type="number"
-                                    value={form.stock}
-                                    onChange={handleChange}
-                                    placeholder={isEditing ? form.stock || 'Stock quantity' : 'Stock quantity'}
-                                    className="focus:border-primary focus:ring-primary w-full rounded border-gray-300"
-                                    required
-                                />
-                                {errors.stock && <p className="mt-1 text-sm text-red-500">{errors.stock}</p>}
-                            </div>
+                        {/* Stock */}
+                        <div className="space-y-2">
+                            <Label htmlFor="stock" className="text-lg font-semibold">
+                                Stock
+                            </Label>
+                            <Input
+                                id="stock"
+                                type="number"
+                                value={data.stock}
+                                onChange={(e) => setData('stock', e.target.value)}
+                                placeholder="Stock"
+                                className="border-primary/20 focus:ring-primary"
+                            />
+                            {errors.stock && <p className="text-destructive text-sm">{errors.stock}</p>}
                         </div>
-                    </div>
 
-                    <div className="grid grid-cols-3 items-center gap-4">
-                        <Label htmlFor="category_id" className="text-left font-medium">
-                            Category
-                        </Label>
-                        <div className="col-span-2">
-                            <Select value={form.category_id} onValueChange={handleSelectChange}>
-                                <SelectTrigger className="focus:border-primary focus:ring-primary w-full rounded border-gray-300">
-                                    <SelectValue placeholder="Select category" />
+                        {/* Category */}
+                        <div className="space-y-2">
+                            <Label htmlFor="category_id" className="text-lg font-semibold">
+                                Category
+                            </Label>
+                            <Select value={data.category_id} onValueChange={(value) => setData('category_id', value)}>
+                                <SelectTrigger className="border-primary/20 focus:ring-primary">
+                                    <SelectValue placeholder="Select a category" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categories.map((category) => (
@@ -254,126 +301,182 @@ const ProductCreatePage: React.FC = () => {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            {errors.category_id && <p className="mt-1 text-sm text-red-500">{errors.category_id}</p>}
+                            {errors.category_id && <p className="text-destructive text-sm">{errors.category_id}</p>}
                         </div>
-                    </div>
 
-                    <div className="grid grid-cols-3 items-center gap-4">
-                        <Label htmlFor="discount" className="text-left font-medium">
-                            Discount
-                        </Label>
-                        <div className="col-span-2">
+                        {/* Rating */}
+                        <div className="space-y-2">
+                            <Label htmlFor="rating" className="text-lg font-semibold">
+                                Rating
+                            </Label>
+                            <Input
+                                id="rating"
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                max="5"
+                                value={data.rating}
+                                onChange={(e) => setData('rating', e.target.value)}
+                                placeholder="Rating (0-5)"
+                                className="border-primary/20 focus:ring-primary"
+                            />
+                            {errors.rating && <p className="text-destructive text-sm">{errors.rating}</p>}
+                        </div>
+
+                        {/* Discount */}
+                        <div className="space-y-2">
+                            <Label htmlFor="discount" className="text-lg font-semibold">
+                                Discount (%)
+                            </Label>
                             <Input
                                 id="discount"
-                                name="discount"
                                 type="number"
                                 min="0"
                                 max="100"
-                                value={form.discount}
-                                onChange={handleChange}
-                                placeholder={isEditing ? form.discount || 'Discount (%)' : 'Discount (%)'}
-                                className="focus:border-primary focus:ring-primary w-full rounded border-gray-300"
+                                value={data.discount}
+                                onChange={(e) => setData('discount', e.target.value)}
+                                placeholder="Discount"
+                                className="border-primary/20 focus:ring-primary"
                             />
-                            {errors.discount && <p className="mt-1 text-sm text-red-500">{errors.discount}</p>}
+                            {errors.discount && <p className="text-destructive text-sm">{errors.discount}</p>}
                         </div>
-                    </div>
 
-                    <div className="grid grid-cols-3 items-start gap-4">
-                        <Label htmlFor="tags" className="text-left font-medium">
-                            Tags
-                        </Label>
-                        <div className="col-span-2">
+                        {/* Tags */}
+                        <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor="tags" className="text-lg font-semibold">
+                                Tags
+                            </Label>
                             <Input
                                 id="tags"
-                                value={tagInput}
-                                onChange={handleTagInputChange}
-                                onKeyDown={handleTagKeyDown}
-                                placeholder="Type tag and press Enter"
-                                className="focus:border-primary focus:ring-primary w-full rounded border-gray-300"
+                                onKeyDown={handleTagInput}
+                                placeholder="Press Enter to add tags"
+                                className="border-primary/20 focus:ring-primary"
                             />
-                            {form.tags.length > 0 && (
-                                <div className="mt-2 flex flex-wrap gap-2">
-                                    {form.tags.map((tag, index) => (
-                                        <div
-                                            key={index}
-                                            className="bg-primary text-primary-foreground flex items-center rounded-full px-3 py-1 text-sm"
+                            <div className="mt-2 flex flex-wrap gap-2">
+                                {data.tags.map((tag, index) => (
+                                    <span key={index} className="bg-primary text-primary-foreground flex items-center rounded-full px-3 py-1 text-sm">
+                                        {tag}
+                                        <button
+                                            type="button"
+                                            onClick={() => removeTag(index)}
+                                            className="text-primary-foreground ml-2 hover:text-white"
                                         >
-                                            {tag}
-                                            <button type="button" onClick={() => removeTag(index)} className="ml-2 text-sm hover:text-red-200">
+                                            ×
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                            {errors.tags && <p className="text-destructive text-sm">{errors.tags}</p>}
+                        </div>
+
+                        {/* Description */}
+                        <div className="space-y-2 md:col-span-2">
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="description" className="text-lg font-semibold">
+                                    Description
+                                </Label>
+                                <Button
+                                    type="button"
+                                    onClick={generateDescription}
+                                    disabled={isGeneratingDescription || !data.name || data.images.length === 0}
+                                    className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                                >
+                                    {isGeneratingDescription ? 'Generating...' : 'Generate Description'}
+                                </Button>
+                            </div>
+                            <Textarea
+                                id="description"
+                                value={data.description}
+                                onChange={(e) => setData('description', e.target.value)}
+                                placeholder="Product Description"
+                                className="border-primary/20 focus:ring-primary min-h-[100px]"
+                            />
+                            {errors.description && <p className="text-destructive text-sm">{errors.description}</p>}
+                        </div>
+
+                        {/* Existing Images */}
+                        {data.existing_images.length > 0 && (
+                            <div className="space-y-2 md:col-span-2">
+                                <Label className="text-lg font-semibold">Existing Images</Label>
+                                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                                    {data.existing_images.map((image, index) => (
+                                        <div key={image.id} className="group relative">
+                                            <img
+                                                src={image.url}
+                                                alt="Product Image"
+                                                className={`h-32 w-full rounded-lg border-2 object-cover transition-all duration-200 ${
+                                                    index === data.primary_image_index ? 'border-primary ring-primary/50 ring-2' : 'border-border'
+                                                } hover:cursor-pointer hover:shadow-lg`}
+                                                onClick={() => setPrimaryImage(index)}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => removeExistingImage(index)}
+                                                className="bg-destructive absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full text-white opacity-0 transition-opacity group-hover:opacity-100"
+                                            >
+                                                ×
+                                            </button>
+                                            {index === data.primary_image_index && (
+                                                <span className="bg-primary absolute bottom-2 left-2 rounded px-2 py-1 text-xs text-white">
+                                                    Primary
+                                                </span>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* New Images with Preview */}
+                        <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor="images" className="text-lg font-semibold">
+                                Upload Images
+                            </Label>
+                            <Input
+                                id="images"
+                                type="file"
+                                multiple
+                                accept="image/jpeg,image/png,image/jpg,image/gif"
+                                onChange={handleImageChange}
+                                className="border-primary/20 focus:ring-primary"
+                            />
+                            {errors.images && <p className="text-destructive text-sm">{errors.images}</p>}
+                            {imagePreviews.length > 0 && (
+                                <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                                    {imagePreviews.map((preview, index) => (
+                                        <div key={index} className="group relative">
+                                            <img
+                                                src={preview}
+                                                alt={`Uploaded Image ${index + 1}`}
+                                                className="border-border h-32 w-full rounded-lg border-2 object-cover"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => removeUploadedImage(index)}
+                                                className="bg-destructive absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full text-white opacity-0 transition-opacity group-hover:opacity-100"
+                                            >
                                                 ×
                                             </button>
                                         </div>
                                     ))}
                                 </div>
                             )}
-                            {errors.tags && <p className="mt-1 text-sm text-red-500">{errors.tags}</p>}
                         </div>
-                    </div>
 
-                    <div className="grid grid-cols-3 items-start gap-4">
-                        <Label htmlFor="images" className="text-left font-medium">
-                            Images
-                        </Label>
-                        <div className="col-span-2">
-                            <Input
-                                id="images"
-                                name="images"
-                                type="file"
-                                multiple
-                                accept="image/jpeg,image/png,image/jpg,image/gif"
-                                onChange={handleFileChange}
-                                className="focus:border-primary focus:ring-primary w-full rounded border-gray-300"
-                            />
-                            {errors.images && <p className="mt-1 text-sm text-red-500">{errors.images}</p>}
-                            {errors['images.0'] && <p className="mt-1 text-sm text-red-500">{errors['images.0']}</p>}
+                        <div className="md:col-span-2">
+                            <Button
+                                type="submit"
+                                disabled={processing}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90 w-full py-3 text-lg"
+                            >
+                                {product ? 'Update Product' : 'Create Product'}
+                            </Button>
                         </div>
-                    </div>
-
-                    {(form.images.length > 0 || form.existing_images.length > 0) && (
-                        <div className="grid grid-cols-3 items-start gap-4">
-                            <Label className="text-left font-medium">Primary Image</Label>
-                            <div className="col-span-2">
-                                <div className="grid grid-cols-3 gap-4">
-                                    {form.existing_images.map((image, index) => (
-                                        <div key={`existing-${image.id}`} className="relative">
-                                            <img
-                                                src={`/storage/${image.image_path}`}
-                                                alt={`Existing ${index}`}
-                                                className="h-24 w-full rounded object-cover"
-                                            />
-                                            <input
-                                                type="radio"
-                                                name="primary_image_index"
-                                                checked={form.primary_image_index === index}
-                                                onChange={() => handlePrimaryImageChange(index, false)}
-                                                className="absolute top-2 right-2 h-4 w-4"
-                                            />
-                                        </div>
-                                    ))}
-                                    {form.images.map((image, index) => (
-                                        <div key={`new-${index}`} className="relative">
-                                            <img src={URL.createObjectURL(image)} alt={`New ${index}`} className="h-24 w-full rounded object-cover" />
-                                            <input
-                                                type="radio"
-                                                name="primary_image_index"
-                                                checked={form.primary_image_index === index + form.existing_images.length}
-                                                onChange={() => handlePrimaryImageChange(index + form.existing_images.length, true)}
-                                                className="absolute top-2 right-2 h-4 w-4"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                                {errors.primary_image_index && <p className="mt-1 text-sm text-red-500">{errors.primary_image_index}</p>}
-                            </div>
-                        </div>
-                    )}
-                </div>
-                <Button type="submit" className="bg-primary hover:bg-primary/90 mt-8 w-full rounded py-2 text-white">
-                    {isEditing ? 'Update Product' : 'Create Product'}
-                </Button>
-            </form>
+                    </form>
+                </CardContent>
+            </Card>
         </AppLayout>
     );
 };
 
-export default ProductCreatePage;
+export default CreateProductPage;

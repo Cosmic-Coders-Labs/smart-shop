@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 const LandingPage: React.FC = () => {
     const { featuredProducts, auth, chatMessages } = usePage<LandingPageProps>().props;
     const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
-
+    console.log(featuredProducts);
     const toggleChat = () => setIsChatOpen(!isChatOpen);
 
     return (
@@ -57,9 +57,15 @@ const LandingPage: React.FC = () => {
                         {featuredProducts.map((product) => (
                             <div key={product.id} className="bg-card text-card-foreground overflow-hidden rounded-lg shadow-md">
                                 <img
-                                    src={product.image_url || 'https://via.placeholder.com/300'}
+                                    src={
+                                        product.images.find((img) => img.is_primary)?.image_path
+                                            ? `/storage/${product.images.find((img) => img.is_primary).image_path}`
+                                            : product.images[0]?.image_path
+                                              ? `/storage/${product.images[0].image_path}`
+                                              : 'https://via.placeholder.com/300'
+                                    }
                                     alt={product.name}
-                                    className="h-48 w-full object-cover"
+                                    className="h-48 w-full object-contain"
                                 />
                                 <div className="p-4">
                                     <h4 className="text-xl font-semibold">{product.name}</h4>
@@ -99,7 +105,7 @@ const LandingPage: React.FC = () => {
             <div className="fixed right-6 bottom-6 z-50">
                 <button
                     onClick={toggleChat}
-                    className="bg-pink text-primary-foreground hover:bg-pink-dark transform rounded-full p-4 shadow-2xl transition-all duration-300 hover:scale-110 hover:rotate-12"
+                    className="text-primary-foreground hover:bg-pink-dark transform rounded-full bg-blue-900 p-4 shadow-2xl transition-all duration-300 hover:scale-110 hover:rotate-12"
                     aria-label="Toggle chat"
                 >
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -94,9 +94,9 @@ const CartPage = ({ cartItems, flash }: CartPageProps) => {
             {cartItems.length === 0 ? (
                 <p className="text-muted-foreground text-center">Your cart is empty.</p>
             ) : (
-                <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {/* Cart Table */}
-                    <div className="bg-card rounded-lg px-4 py-6 shadow-md">
+                    <div className="bg-card rounded-lg px-4 py-6 shadow-md lg:col-span-2">
                         <table className="w-full">
                             <thead>
                                 <tr className="border-border border-b">
@@ -157,7 +157,7 @@ const CartPage = ({ cartItems, flash }: CartPageProps) => {
                     </div>
 
                     {/* Cart Summary */}
-                    <div className="bg-card rounded-lg px-4 py-6 shadow-md">
+                    <div className="bg-card rounded-lg px-4 py-6 shadow-md lg:col-span-1">
                         <h2 className="text-foreground mb-4 text-xl font-semibold">Order Summary</h2>
                         <div className="flex justify-between">
                             <span className="text-foreground">Total</span>

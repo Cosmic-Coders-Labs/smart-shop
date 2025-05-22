@@ -1,11 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem, type ProductPageProps } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem, type ProductPageProps } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -24,7 +23,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const ProductShowPage: React.FC = () => {
     const { product, auth, flash } = usePage<
-        ProductPageProps & { auth: { user: { id: number } | null }; flash: { success?: string; error?: string } }
+        ProductPageProps & {
+            auth: { user: { id: number; is_admin?: boolean } | null };
+            flash: { success?: string; error?: string };
+        }
     >().props;
 
     // State for current image index
@@ -73,13 +75,16 @@ const ProductShowPage: React.FC = () => {
 
     // Handle edit button click
     const handleEdit = () => {
-        router.get(route('products.create', { edit: product.id }));
+        router.get(route('products.edit', product.id));
     };
 
     // Get current image URL
     const currentImage = product.images[currentImageIndex]?.image_path
         ? `/storage/${product.images[currentImageIndex].image_path}`
         : 'https://via.placeholder.com/300';
+
+    // Determine if "Add to Cart" should be shown
+    const canAddToCart = auth.user ? auth.user.id !== product.user_id && !auth.user.is_admin : true; // Show for guests (non-authenticated users)
 
     return (
         <AppLayout breadcrumbs={breadcrumbs} className={'flex h-full flex-1 flex-col gap-4 rounded-xl p-4'}>
@@ -92,7 +97,7 @@ const ProductShowPage: React.FC = () => {
                     <CardHeader>
                         <div className="relative">
                             {/* Main Image */}
-                            <img src={currentImage} alt={product.name} className="h-96 w-full rounded-lg object-cover" />
+                            <img src={currentImage} alt={product.name} className="h-96 w-full rounded-lg object-contain" />
                             {/* Next/Previous Buttons */}
                             {product.images.length > 1 && (
                                 <>
@@ -168,13 +173,15 @@ const ProductShowPage: React.FC = () => {
                         {product.tags && product.tags.length > 0 && <p className="text-muted-foreground text-sm">Tags: {product.tags.join(', ')}</p>}
                         <p className="text-foreground">{product.description || 'No description available.'}</p>
                         <div className="flex gap-4">
-                            <Button
-                                onClick={handleAddToCart}
-                                className="bg-primary text-primary-foreground hover:bg-primary-dark w-full"
-                                disabled={product.stock === 0}
-                            >
-                                Add to Cart
-                            </Button>
+                            {canAddToCart && (
+                                <Button
+                                    onClick={handleAddToCart}
+                                    className="bg-primary text-primary-foreground hover:bg-primary-dark w-full"
+                                    disabled={product.stock === 0}
+                                >
+                                    Add to Cart
+                                </Button>
+                            )}
                             {auth.user && auth.user.id === product.user_id && (
                                 <Button onClick={handleEdit} className="bg-secondary text-secondary-foreground hover:bg-secondary/90 w-full">
                                     Edit Product

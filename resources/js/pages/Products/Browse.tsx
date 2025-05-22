@@ -197,8 +197,8 @@ const ProductBrowsePage = ({ products, categories, filters, flash }: ProductsPag
             ) : (
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {products.data.map((product) => (
-                        <Card key={product.id} className="bg-card text-card-foreground">
-                            <CardHeader>
+                        <Card key={product.id} className="bg-card text-card-foreground py-0 pb-4">
+                            <CardHeader className="px-0">
                                 <Link href={route('products.show', product.id)}>
                                     <img
                                         src={
@@ -209,7 +209,7 @@ const ProductBrowsePage = ({ products, categories, filters, flash }: ProductsPag
                                                   : 'https://via.placeholder.com/300'
                                         }
                                         alt={product.name}
-                                        className="h-48 w-full rounded-lg object-cover"
+                                        className="h-48 w-full rounded-lg object-contain"
                                     />
                                 </Link>
                             </CardHeader>

@@ -3,7 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BadgePlus, Barcode, LayoutGrid, ShoppingCart } from 'lucide-react';
+import { BadgePlus, BoxIcon, LayoutGrid, ShoppingCart } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -11,21 +11,25 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: route('dashboard'),
         icon: LayoutGrid,
+        roles: ['customer', 'admin'],
     },
     {
         title: 'Products',
-        href: route('products.index'),
-        icon: Barcode,
+        href: route('products.dashboard'),
+        icon: BoxIcon,
+        roles: ['customer', 'admin'],
     },
     {
         title: 'Cart',
         href: route('cart.index'),
         icon: ShoppingCart,
+        roles: ['customer'],
     },
     {
         title: 'Create',
         href: route('products.create'),
         icon: BadgePlus,
+        roles: ['admin'],
     },
 ];
 

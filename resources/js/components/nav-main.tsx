@@ -4,15 +4,18 @@ import { Link, usePage } from '@inertiajs/react';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
     const page = usePage();
+    const currentRole = page.props.auth?.user?.role || 'customer';
     return (
         <SidebarGroup className="px-2 py-0">
             <SidebarGroupLabel>Platform</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton  
-                            asChild isActive={item.href === page.url}
+                        <SidebarMenuButton
+                            asChild
+                            isActive={item.href === page.url}
                             tooltip={{ children: item.title }}
+                            hidden={!item.roles.includes(currentRole)}
                         >
                             <Link href={item.href} prefetch>
                                 {item.icon && <item.icon />}

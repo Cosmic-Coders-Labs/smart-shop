@@ -13,7 +13,7 @@ class LandingPageController extends Controller
     public function index(Request $request)
     {
         $featuredProducts = Product::where('stock', '>', 0)
-            ->with('category')
+            ->with(['category', 'images'])
             ->take(6)
             ->get()
             ->map(fn($product) => [
@@ -21,7 +21,7 @@ class LandingPageController extends Controller
                 'name' => $product->name,
                 'price' => $product->price,
                 'category' => $product->category->name,
-                'image_url' => $product->image_url,
+                'images' => $product->images,
             ]);
 
         return Inertia::render('landing-page', [

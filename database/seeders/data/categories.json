@@ -7,21 +7,21 @@
     {
         "id": 2,
         "name": "Clothing",
-        "description": "Apparel and accessories"
+        "description": "Fashion and apparel"
     },
     {
         "id": 3,
-        "name": "Home",
-        "description": "Home appliances and decor"
+        "name": "Home & Kitchen",
+        "description": "Household and kitchen items"
     },
     {
         "id": 4,
         "name": "Books",
-        "description": "Fiction, non-fiction, and more"
+        "description": "Books and literature"
     },
     {
         "id": 5,
         "name": "Toys",
-        "description": "Games and toys for all ages"
+        "description": "Toys and games"
     }
 ]
