@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\GeminiApiController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
@@ -55,6 +56,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('recommendations/user', [RecommendationController::class, 'getUserRecommendations'])->name('recommendations.user');
     Route::apiResource('chat-messages', ChatMessageController::class);
     Route::get('chat-messages/history', [ChatMessageController::class, 'getUserChatHistory']);
+
+    Route::get('/support/chat', [ChatbotController::class, 'index'])->name('chat.index');
+    Route::post('/support/chat', [ChatbotController::class, 'sendMessage'])->name('chat.send');
 });
 
 require __DIR__ . '/settings.php';

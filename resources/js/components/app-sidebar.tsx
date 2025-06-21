@@ -3,7 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BadgePlus, BoxIcon, LayoutGrid, ShoppingCart } from 'lucide-react';
+import { BadgePlus, BoxIcon, Headphones, LayoutGrid, ShoppingCart } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -30,6 +30,12 @@ const mainNavItems: NavItem[] = [
         href: route('products.create'),
         icon: BadgePlus,
         roles: ['admin'],
+    },
+    {
+        title: 'Support',
+        href: route('chat.index'),
+        icon: Headphones,
+        roles: ['customer', 'admin'],
     },
 ];
 
